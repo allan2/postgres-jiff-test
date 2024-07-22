@@ -1,0 +1,8 @@
+[package]
+name = "postgres-jiff-test"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+postgres = { git = "https://github.com/allan2/rust-postgres", branch = "jiff", features = ["with-jiff-0_1"] }
+jiff = "0.1"
