@@ -4,5 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-postgres = { git = "https://github.com/allan2/rust-postgres", branch = "jiff", features = ["with-jiff-0_1"] }
+postgres = { path = "/home/al/desktop/repos/rust-postgres/postgres", features = ["with-jiff-0_1"] }
 jiff = "0.1"
+postgres-types = { path = "/home/al/desktop/repos/rust-postgres/postgres-types", features = ["with-jiff-0_1", "derive"] }
+postgres-protocol = "0.6"

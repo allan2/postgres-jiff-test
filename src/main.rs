@@ -1,6 +1,6 @@
 use jiff::{
     civil::{Date, DateTime, Time},
-    Timestamp, Zoned,
+    SpanRound, Timestamp, Unit,
 };
 use postgres::{Config, NoTls};
 
@@ -13,17 +13,29 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         "SELECT NOW()::timestamp, NOW(), CURRENT_DATE, CURRENT_TIME::time",
         &[],
     )?;
-
-    // timestamp
+    // timestamp in Postgres
     let datetime: DateTime = row.get(0);
-
-    // timestamptz
+    // timestamptz in Postgres
     let ts: Timestamp = row.get(1);
-    let zoned: Zoned = row.get(1);
 
     let date: Date = row.get(2);
     let time: Time = row.get(3);
 
-    println!("{datetime}\n{ts}\n{zoned}\n{date}\n{time}");
+    // test FromSql
+    println!("{datetime}\n{ts}\n{date}\n{time}");
+
+    // test ToSql
+    // in the query, the Postgres type is text unless we cast
+    let row = client.query_one(
+        "SELECT $1::timestamp, $2::timestamptz, $3::date, $4::time",
+        &[&datetime, &ts, &date, &time],
+    )?;
+    println!(
+        "{datetime}\n{ts}\n{date}\n{time}",
+        datetime = row.get::<_, DateTime>(0),
+        ts = row.get::<_, Timestamp>(1),
+        date = row.get::<_, Date>(2),
+        time = row.get::<_, Time>(3)
+    );
     Ok(())
 }
